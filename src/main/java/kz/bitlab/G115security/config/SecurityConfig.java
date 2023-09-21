@@ -1,5 +1,6 @@
 package kz.bitlab.G115security.config;
 
+import kz.bitlab.G115security.repository.UserRepository;
 import kz.bitlab.G115security.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +22,12 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity // активирует разрешения при обращении к эндпоинтам по статусу пользователя
 public class SecurityConfig {
   @Autowired
-  private UserService userService;
+  private UserRepository userRepository;
 
   @Bean
   public UserDetailsService userDetailsService() {
     return email -> {
-      var user = userService.getUserByEmail(email);
+      var user = userRepository.findByEmail(email);
       if (user == null) {
         throw new UsernameNotFoundException("User not found!");
       }
